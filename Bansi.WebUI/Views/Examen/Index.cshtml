@@ -1,0 +1,100 @@
+﻿@model Bansi.WebUI.Models.ExamenViewModel
+
+@{
+    ViewData["Title"] = "Gestión de Exámenes";
+}
+
+<style>
+    .datagrid-bansi tbody tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+    .datagrid-bansi tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>Catálogo de Exámenes</h2>
+
+    @if (TempData["Exito"] != null)
+    {
+        <div class="alert alert-success">@TempData["Exito"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Guardar" method="post">
+                <input type="hidden" asp-for="IdExamen" id="IdExamen" />
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" id="Nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label">Descripción</label>
+                    <input asp-for="Descripcion" class="form-control" id="Descripcion" />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="UsarSp" class="form-check-input" type="checkbox" id="UsarSp" />
+                    <label class="form-check-label" asp-for="UsarSp">
+                        Guardar usando Procedimientos Almacenados (En lugar de EF)
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+            </form>
+        </div>
+    </div>
+
+    <h4>Registros Actuales</h4>
+    <table class="table table-bordered datagrid-bansi">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ListaExamenes)
+            {
+                <tr>
+                    <td>@item.IdExamen</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Descripcion</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="seleccionar(@item.IdExamen, '@item.Nombre', '@item.Descripcion')">Editar</button>
+                        <form asp-action="Eliminar" method="post" style="display:inline;">
+                            <input type="hidden" name="idExamen" value="@item.IdExamen" />
+                            <input type="hidden" name="usarSp" value="@Model.UsarSp" id="deleteUsarSp_@item.IdExamen" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="document.getElementById('deleteUsarSp_@item.IdExamen').value = document.getElementById('UsarSp').checked;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function seleccionar(id, nombre, descripcion) {
+        document.getElementById('IdExamen').value = id;
+        document.getElementById('Nombre').value = nombre;
+        document.getElementById('Descripcion').value = descripcion;
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('IdExamen').value = 0;
+        document.getElementById('Nombre').value = '';
+        document.getElementById('Descripcion').value = '';
+    }
+</script>

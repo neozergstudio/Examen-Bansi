@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Bansi.Api/Bansi.Api.csproj" />
+  <Project Path="Bansi.Application/Bansi.Application.csproj" />
+  <Project Path="Bansi.Domain/Bansi.Domain.csproj" />
+  <Project Path="Bansi.Infrastructure/Bansi.Infrastructure.csproj" />
+  <Project Path="Bansi.WebUI/Bansi.WebUI.csproj" />
+</Solution>
